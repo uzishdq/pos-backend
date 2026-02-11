@@ -4,7 +4,7 @@ import { loginSchema, registerSchema } from "../utils/schema/auth.schema";
 import { errorResponse, successResponse } from "../utils/responseHelper";
 
 export class AuthController {
-  private authService: AuthService;
+  private readonly authService: AuthService;
 
   constructor() {
     this.authService = new AuthService();

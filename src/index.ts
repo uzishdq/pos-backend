@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: "http://localhost:5173", // host frontend kamu
     credentials: true, // jika kirim cookie atau Authorization
-  })
+  }),
 );
 
 app.use(express.json());

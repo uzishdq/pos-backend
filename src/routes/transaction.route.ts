@@ -13,5 +13,10 @@ transactionRouter.post(
 );
 
 transactionRouter.get("/", authenticate, controller.getAll.bind(controller));
+transactionRouter.get(
+  "/:id",
+  authenticate,
+  controller.getDetailTransaction.bind(controller)
+);
 
 export default transactionRouter;

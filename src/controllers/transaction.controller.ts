@@ -4,7 +4,7 @@ import { insertTransactionSchema } from "../utils/schema/transaction.schema";
 import { errorResponse, successResponse } from "../utils/responseHelper";
 
 export class TransactionController {
-  private transactionService: TransactionService;
+  private readonly transactionService: TransactionService;
 
   constructor() {
     this.transactionService = new TransactionService();
@@ -29,6 +29,16 @@ export class TransactionController {
     try {
       const result = await this.transactionService.getAll();
       return successResponse(res, "Transactions fetched", result);
+    } catch (error) {
+      return errorResponse(res, error);
+    }
+  }
+
+  async getDetailTransaction(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const result = await this.transactionService.findById(id);
+      return successResponse(res, "Detail Transactions fetched", result);
     } catch (error) {
       return errorResponse(res, error);
     }

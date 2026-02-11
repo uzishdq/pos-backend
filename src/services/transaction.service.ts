@@ -1,6 +1,6 @@
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "../db";
-import { products, transactionItems, transactions } from "../db/schema";
+import { products, transactionItems, transactions, users } from "../db/schema";
 import { TransactionInputSchemaType } from "../utils/schema/transaction.schema";
 
 export class TransactionService {
@@ -63,5 +63,47 @@ export class TransactionService {
     const result = await db.select().from(transactions);
 
     return result;
+  }
+
+  async findById(id: string) {
+    const [transaction] = await db
+      .select({
+        id: transactions.id,
+        createdAt: transactions.createdAt,
+        total: transactions.total,
+        user: {
+          id: users.id,
+          username: users.username,
+          role: users.role,
+        },
+      })
+      .from(transactions)
+      .innerJoin(users, eq(transactions.userId, users.id))
+      .where(eq(transactions.id, id))
+      .limit(1);
+
+    if (!transaction) {
+      throw new Error("transaction not found");
+    }
+
+    const items = await db
+      .select({
+        id: transactionItems.id,
+        qty: transactionItems.qyt,
+        price: transactionItems.price,
+        product: {
+          id: products.id,
+          name: products.name,
+          price: products.price,
+        },
+      })
+      .from(transactionItems)
+      .innerJoin(products, eq(transactionItems.productId, products.id))
+      .where(eq(transactionItems.transactionId, id));
+
+    return {
+      ...transaction,
+      items,
+    };
   }
 }

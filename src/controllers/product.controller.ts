@@ -7,7 +7,7 @@ import {
 } from "../utils/schema/product.schema";
 
 export class ProductController {
-  private productService: ProductService;
+  private readonly productService: ProductService;
 
   constructor() {
     this.productService = new ProductService();
